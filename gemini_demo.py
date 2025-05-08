@@ -2,23 +2,15 @@ import os
 from google import genai
 from sanskrit_transliteration import parse_mantra_text, create_transliteration_prompt, save_transliteration_result
 
-def setup_gemini_api(api_key):
-    """设置Gemini API客户端"""
+def generate_text(api_key, prompt):
+    """使用Gemini生成文本，每次调用时初始化API客户端"""
     try:
         # 创建客户端
-        global client
         client = genai.Client(api_key=api_key)
-        return True
-    except Exception as e:
-        print(f"API设置错误: {e}")
-        return False
-
-def generate_text(prompt):
-    """使用Gemini生成文本"""
-    try:
+        
         # 生成响应
         response = client.models.generate_content(
-            model='gemini-2.5-pro-exp-03-25',
+            model='gemini-2.5-flash',
             contents=prompt
         )
         
@@ -28,7 +20,7 @@ def generate_text(prompt):
         print(f"生成文本时出错: {e}")
         return None
 
-def process_mantras(input_file, output_file):
+def process_mantras(api_key, input_file, output_file):
     """处理陀罗尼文件并生成音译结果"""
     # 读取输入文件
     try:
@@ -52,7 +44,7 @@ def process_mantras(input_file, output_file):
         # 创建提示词并获取音译
         print("正在生成音译...")
         prompt = create_transliteration_prompt(mantra['title'], mantra['content'])
-        transliteration = generate_text(prompt)
+        transliteration = generate_text(api_key, prompt)
         
         if transliteration:
             print(f"音译结果: {transliteration}")
@@ -79,16 +71,12 @@ def main():
         print("请设置GOOGLE_API_KEY环境变量")
         return
     
-    # 设置API
-    if not setup_gemini_api(api_key):
-        return
-    
     # 设置输入输出文件路径
     input_file = "extracted_mantras2.txt"
     output_file = "transliterated_mantras.txt"
     
     # 处理陀罗尼
-    process_mantras(input_file, output_file)
+    process_mantras(api_key, input_file, output_file)
 
 if __name__ == "__main__":
     main()

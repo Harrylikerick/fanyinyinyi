@@ -36,8 +36,8 @@ def parse_mantra_text(text):
 
 def create_transliteration_prompt(title, sanskrit_text):
     """创建用于Gemini API的音译提示词"""
-    prompt = f"""请将以下梵文陀罗尼按照现代梵音发音规则音译为中文。
-要求：只输出音译结果
+    prompt = f"""请将以下梵文陀罗尼按照现代梵音发音规则音译为简体中文。
+要求：只输出音译结果，输出结果为纯简体中文无其他语言，无错音漏音。
 
 梵文原文：
 {sanskrit_text}

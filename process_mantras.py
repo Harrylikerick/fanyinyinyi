@@ -1,6 +1,7 @@
 import os
 from sanskrit_transliteration import parse_mantra_text, create_transliteration_prompt, save_transliteration_result
 from gemini_demo import generate_text, setup_gemini_api
+import time # 添加 time 模块导入
 
 def process_mantras_batch(input_file, output_file):
     """批量处理陀罗尼文本并生成音译结果"""
@@ -55,6 +56,9 @@ def process_mantras_batch(input_file, output_file):
             processed_count += 1
         else:
             print("❌ 音译失败")
+            
+        # 添加延迟以控制请求频率
+        time.sleep(4.1) # 每分钟最多约 14.6 次请求 (60 / 4.1)
     
     # 总结处理结果
     if processed_count > 0:
